@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 echo -e "Loading..."
-APP="kodi"
+APP="emulationstation"
 var_disk="8"
 var_cpu="2"
 var_ram="4096"
@@ -44,7 +44,7 @@ else
     exit
 fi
 function header_info {
-echo -e "kodi---------\n\n"
+echo -e "emulationstation---------\n\n"
 }
 function msg_info() {
     local msg="$1"
@@ -98,7 +98,7 @@ var_version=$(whiptail --title "UBUNTU VERSION" --radiolist "Choose Version" 10 
 "12" "Jammy" ON \
 3>&1 1>&2 2>&3)
 exitstatus=$?
-if [ $exitstatus = 0 ]; then echo -e "${DGN}Using Ubuntu Version: ${BGN}$var_version${CL}"; fi
+if [ $exitstatus = 0 ]; then echo -e "${DGN}Using Debian Version: ${BGN}$var_version${CL}"; fi
 CT_TYPE=$(whiptail --title "CONTAINER TYPE" --radiolist --cancel-button Exit-Script "Choose Type" 8 58 2 \
 "1" "Unprivileged" ON \
 "0" "Privileged" OFF \
