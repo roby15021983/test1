@@ -190,8 +190,8 @@ msg_info "Setting up autologin"
 
 cat <<EOF >/etc/lightdm/lightdm.conf
 [Seat:*]
-autologin-user=roberto
-autologin-session=roberto
+#autologin-user=kodi
+#autologin-session=kodi-alsa
 EOF
 
 msg_ok "Set up autologin"
