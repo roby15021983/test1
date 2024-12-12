@@ -39,14 +39,14 @@ apt-get -y install \
 msg_ok "Set Up Hardware Acceleration"  
 
 msg_info "Setting Up kodi user"
-useradd -d /home/roberto -m roberto &>/dev/null
-gpasswd -a roberto audio &>/dev/null
-gpasswd -a roberto video &>/dev/null
-gpasswd -a roberto render &>/dev/null
+useradd -d /home/kodi -m kodi &>/dev/null
+gpasswd -a kodi audio &>/dev/null
+gpasswd -a kodi video &>/dev/null
+gpasswd -a kodi render &>/dev/null
 groupadd -r autologin &>/dev/null
-gpasswd -a roberto autologin &>/dev/null
-gpasswd -a roberto input &>/dev/null #to enable direct access to devices
-sudo sed -i -e '$a\roberto ALL=(ALL) NOPASSWD:ALL' /etc/sudoers
+gpasswd -a kodi autologin &>/dev/null
+gpasswd -a kodi input &>/dev/null #to enable direct access to devices
+sudo sed -i -e '$a\kodi ALL=(ALL) NOPASSWD:ALL' /etc/sudoers
 
 msg_ok "Set Up roberto user"
 
@@ -81,8 +81,10 @@ EndSection
 _EOF_
 done
 __EOF__
+
 /bin/chmod +x /usr/local/bin/preX-populate-input.sh
 /bin/mkdir -p /etc/systemd/system/lightdm.service.d
+
 cat > /etc/systemd/system/lightdm.service.d/override.conf << __EOF__
 [Service]
 ExecStartPre=/bin/sh -c '/usr/local/bin/preX-populate-input.sh'
@@ -99,6 +101,7 @@ chmod -x /etc/update-motd.d/*
 touch ~/.hushlogin
 GETTY_OVERRIDE="/etc/systemd/system/container-getty@1.service.d/override.conf"
 mkdir -p $(dirname $GETTY_OVERRIDE)
+
 cat << EOF > $GETTY_OVERRIDE
 [Service]
 ExecStart=
