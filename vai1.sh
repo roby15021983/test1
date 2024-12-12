@@ -143,7 +143,7 @@ msg_ok "Updated xsession"
 
 msg_info "Setting up autologin"
 
-cat <<EOF >/etc/lightdm/lightdm.conf.d/autologin-roberto.conf
+cat <<EOF >/etc/lightdm/lightdm.conf
 [Seat:*]
 autologin-user=roberto
 autologin-session=roberto
