@@ -184,6 +184,19 @@ Type=Application
 EOF
 
 
+cat <<EOF >/home/kodi/.xsession
+[Desktop Entry]
+Name=Kodi-alsa
+Comment=This session will start Kodi media center with alsa support
+Exec=env AE_SINK=ALSA kodi-standalone
+TryExec=env AE_SINK=ALSA kodi-standalone
+Type=Application
+EOF
+
+
+
+
+
 msg_ok "Updated xsession"
 
 msg_info "Setting up autologin"
