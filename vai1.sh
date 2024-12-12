@@ -46,6 +46,8 @@ gpasswd -a roberto render &>/dev/null
 groupadd -r autologin &>/dev/null
 gpasswd -a roberto autologin &>/dev/null
 gpasswd -a roberto input &>/dev/null #to enable direct access to devices
+sudo sed -i -e '$a\roberto ALL=(ALL) NOPASSWD:ALL' /etc/sudoers
+
 msg_ok "Set Up roberto user"
 
 msg_info "Installing lightdm"
@@ -125,6 +127,7 @@ alias die='EXIT=$? LINE=$LINENO error_exit'
 set -e
 msg_ok "Installed kodi"
 
+
 msg_info "Updating xsession"
 cat <<EOF >/usr/share/xsessions/kodi-alsa.desktop
 [Desktop Entry]
@@ -140,10 +143,10 @@ msg_ok "Updated xsession"
 
 msg_info "Setting up autologin"
 
-cat <<EOF >/etc/lightdm/lightdm.conf.d/autologin-kodi.conf
+cat <<EOF >/etc/lightdm/lightdm.conf.d/autologin-roberto.conf
 [Seat:*]
-autologin-user=kodi
-autologin-session=kodi-alsa
+autologin-user=roberto
+autologin-session=roberto
 EOF
 
 msg_ok "Set up autologin"
