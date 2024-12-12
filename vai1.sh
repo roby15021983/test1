@@ -25,6 +25,7 @@ apt-get -y upgrade &>/dev/null
 msg_ok "Updated Container OS"
 
 msg_info "Installing Dependencies"
+apt-get install -y sudo &>/dev/null
 apt-get install -y curl &>/dev/null
 apt-get install -y sudo &>/dev/null
 apt-get install -y gnupg &>/dev/null
@@ -34,62 +35,27 @@ msg_info "Setting Up Hardware Acceleration"
 apt-get -y install \
     va-driver-all \
     ocl-icd-libopencl1 &>/dev/null 
-set +e
-alias die=''
-apt-get install --ignore-missing -y beignet-opencl-icd &>/dev/null
-alias die='EXIT=$? LINE=$LINENO error_exit'
-set -e
 
 msg_ok "Set Up Hardware Acceleration"  
 
 msg_info "Setting Up kodi user"
-useradd -d /home/kodi -m kodi &>/dev/null
-gpasswd -a kodi audio &>/dev/null
-gpasswd -a kodi video &>/dev/null
-gpasswd -a kodi render &>/dev/null
+useradd -d /home/roberto -m roberto &>/dev/null
+gpasswd -a roberto audio &>/dev/null
+gpasswd -a roberto video &>/dev/null
+gpasswd -a roberto render &>/dev/null
 groupadd -r autologin &>/dev/null
-gpasswd -a kodi autologin &>/dev/null
-gpasswd -a kodi input &>/dev/null #to enable direct access to devices
-msg_ok "Set Up kodi user"
+gpasswd -a roberto autologin &>/dev/null
+gpasswd -a roberto input &>/dev/null #to enable direct access to devices
+msg_ok "Set Up roberto user"
 
 msg_info "Installing lightdm"
 DEBIAN_FRONTEND=noninteractive apt-get install -y lightdm &>/dev/null
 echo "/usr/sbin/lightdm" > /etc/X11/default-display-manager
 msg_ok "Installed lightdm"
 
-msg_info "Installing kodi"
-apt-get update &>/dev/null
-apt-get install -y kodi &>/dev/null
-set +e
-alias die=''
-apt-get install --ignore-missing -y kodi-peripheral-joystick &>/dev/null
-alias die='EXIT=$? LINE=$LINENO error_exit'
-set -e
-msg_ok "Installed kodi"
-
-msg_info "Updating xsession"
-cat <<EOF >/usr/share/xsessions/kodi-alsa.desktop
-[Desktop Entry]
-Name=Kodi-alsa
-Comment=This session will start Kodi media center with alsa support
-Exec=env AE_SINK=ALSA kodi-standalone
-TryExec=env AE_SINK=ALSA kodi-standalone
-Type=Application
-EOF
-msg_ok "Updated xsession"
-
-msg_info "Setting up autologin"
-cat <<EOF >/etc/lightdm/lightdm.conf.d/autologin-kodi.conf
-[Seat:*]
-autologin-user=kodi
-autologin-session=kodi-alsa
-EOF
-msg_ok "Set up autologin"
-
 msg_info "Setting up device detection for xorg"
 apt-get install -y xserver-xorg-input-evdev &>/dev/null
-#following script needs to be executed before Xorg starts to enumerate all input devices
-/bin/mkdir -p /etc/X11/xorg.conf.d
+
 cat >/usr/local/bin/preX-populate-input.sh  << __EOF__
 #!/usr/bin/env bash
 ### Creates config file for X with all currently present input devices
@@ -120,12 +86,13 @@ cat > /etc/systemd/system/lightdm.service.d/override.conf << __EOF__
 ExecStartPre=/bin/sh -c '/usr/local/bin/preX-populate-input.sh'
 SupplementaryGroups=video render input audio tty
 __EOF__
+
 systemctl daemon-reload
 msg_ok "Set up device detection for xorg"
 
-PASS=$(grep -w "root" /etc/shadow | cut -b6);
-  if [[ $PASS != $ ]]; then
+
 msg_info "Customizing Container"
+
 chmod -x /etc/update-motd.d/*
 touch ~/.hushlogin
 GETTY_OVERRIDE="/etc/systemd/system/container-getty@1.service.d/override.conf"
@@ -135,6 +102,7 @@ cat << EOF > $GETTY_OVERRIDE
 ExecStart=
 ExecStart=-/sbin/agetty --autologin root --noclear --keep-baud tty%I 115200,38400,9600 \$TERM
 EOF
+
 systemctl daemon-reload
 systemctl restart $(basename $(dirname $GETTY_OVERRIDE) | sed 's/\.d//')
 msg_ok "Customized Container"
@@ -144,6 +112,49 @@ msg_info "Cleaning up"
 apt-get autoremove >/dev/null
 apt-get autoclean >/dev/null
 msg_ok "Cleaned"
+
+
+
+msg_info "Installing kodi"
+apt-get update &>/dev/null
+apt-get install -y kodi &>/dev/null
+set +e
+alias die=''
+apt-get install --ignore-missing -y kodi-peripheral-joystick &>/dev/null
+alias die='EXIT=$? LINE=$LINENO error_exit'
+set -e
+msg_ok "Installed kodi"
+
+msg_info "Updating xsession"
+cat <<EOF >/usr/share/xsessions/kodi-alsa.desktop
+[Desktop Entry]
+Name=Kodi-alsa
+Comment=This session will start Kodi media center with alsa support
+Exec=env AE_SINK=ALSA kodi-standalone
+TryExec=env AE_SINK=ALSA kodi-standalone
+Type=Application
+EOF
+
+
+msg_ok "Updated xsession"
+
+msg_info "Setting up autologin"
+
+cat <<EOF >/etc/lightdm/lightdm.conf.d/autologin-kodi.conf
+[Seat:*]
+autologin-user=kodi
+autologin-session=kodi-alsa
+EOF
+
+msg_ok "Set up autologin"
+
+
+
+
+
+
+
+
 
 msg_info "Starting X up"
 systemctl start lightdm
