@@ -153,7 +153,7 @@ EOF
 systemctl daemon-reload
 systemctl restart $(basename $(dirname $GETTY_OVERRIDE) | sed 's/\.d//')
 msg_ok "Customized Container"
-  fi
+
 
 msg_info "Cleaning up"
 apt-get autoremove >/dev/null
