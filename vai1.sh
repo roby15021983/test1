@@ -209,8 +209,14 @@ EOF
 
 msg_ok "Set up autologin"
 
+mkdir /etc/lightdm/lightdm.conf.d/
 
-
+cat <<EOF >/etc/lightdm/lightdm.conf.d/autologin-kodi.conf
+[Seat:*]
+autologin-user=kodi
+autologin-session=kodi-alsa
+EOF
+msg_ok "Set up autologin"
 
 
 
