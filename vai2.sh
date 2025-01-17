@@ -71,7 +71,18 @@ apt-get install -y sudo &>/dev/null
 apt-get install -y curl &>/dev/null
 apt-get install -y sudo &>/dev/null
 apt-get install -y gnupg &>/dev/null
+apt-get install -y sudo &>/dev/null
+apt-get install -y xinit &>/dev/null
 msg_ok "Installed Dependencies"
+
+
+cat > ~/.xinitrc << __EOF__
+#!/bin/sh
+exec emulationstation
+__EOF__
+
+
+
 
 msg_info "Setting Up Hardware Acceleration"  
 apt-get -y install \
@@ -81,14 +92,14 @@ apt-get -y install \
 msg_ok "Set Up Hardware Acceleration"  
 
 msg_info "Setting Up kodi user"
-useradd -d /home/kodi -m kodi &>/dev/null
-gpasswd -a kodi audio &>/dev/null
-gpasswd -a kodi video &>/dev/null
-gpasswd -a kodi render &>/dev/null
+useradd -d /home/roberto -m roberto &>/dev/null
+gpasswd -a roberto audio &>/dev/null
+gpasswd -a roberto video &>/dev/null
+gpasswd -a roberto render &>/dev/null
 groupadd -r autologin &>/dev/null
-gpasswd -a kodi autologin &>/dev/null
-gpasswd -a kodi input &>/dev/null #to enable direct access to devices
-sudo sed -i -e '$a\kodi ALL=(ALL) NOPASSWD:ALL' /etc/sudoers
+gpasswd -a roberto autologin &>/dev/null
+gpasswd -a roberto input &>/dev/null #to enable direct access to devices
+sudo sed -i -e '$a\roberto ALL=(ALL) NOPASSWD:ALL' /etc/sudoers
 
 msg_ok "Set Up roberto user"
 
@@ -162,15 +173,32 @@ msg_ok "Cleaned"
 
 
 
-msg_info "Installing kodi"
+msg_info "Installing emulation"
 apt-get update &>/dev/null
-apt-get install -y kodi &>/dev/null
+apt-get install -y x11-utils &>/dev/null
+apt-get install -y xorg &>/dev/null
+apt-get install -y gnome-terminal &>/dev/null
+apt-get install -y openbox &>/dev/null
+apt-get install -y pulseaudio &>/dev/null
+apt-get install -y alsa-utils &>/dev/null
+apt-get install -y menu &>/dev/null
+apt-get install -y libglib2.0-bin &>/dev/null
+apt-get install -y at-spi2-core &>/dev/null
+apt-get install -y libglib2.0-bin &>/dev/null
+apt-get install -y dbus-x11 &>/dev/null
+apt-get install -y git &>/dev/null
+apt-get install -y dialog &>/dev/null
+apt-get install -y unzip &>/dev/null
+apt-get install -y xmlstarlet &>/dev/null
 set +e
 alias die=''
-apt-get install --ignore-missing -y kodi-peripheral-joystick &>/dev/null
+apt-get install --ignore-missing -y &>/dev/null
+git clone --depth=1 https://github.com/RetroPie/RetroPie-Setup.git &>/dev/null
+msg_ok "il processo potrebbe essere lungo attendere"
+./RetroPie-Setup/retropie_packages.sh setup basic_install &>/dev/null
 alias die='EXIT=$? LINE=$LINENO error_exit'
 set -e
-msg_ok "Installed kodi"
+msg_ok "Installed emulation"
 
 
 msg_info "Updating xsession"
