@@ -202,22 +202,22 @@ msg_ok "Installed emulation"
 
 
 msg_info "Updating xsession"
-cat <<EOF >/usr/share/xsessions/kodi-alsa.desktop
+cat <<EOF >/usr/share/xsessions/emulationstation-alsa.desktop
 [Desktop Entry]
 Name=Kodi-alsa
-Comment=This session will start Kodi media center with alsa support
-Exec=env AE_SINK=ALSA kodi-standalone
-TryExec=env AE_SINK=ALSA kodi-standalone
+Comment=emulationstation
+Exec=env AE_SINK=ALSA emulationstation
+TryExec=env AE_SINK=ALSA emulationstation
 Type=Application
 EOF
 
 
-cat <<EOF >/home/kodi/.xsession
+cat <<EOF >/home/roberto/.xsession
 [Desktop Entry]
-Name=Kodi-alsa
-Comment=This session will start Kodi media center with alsa support
-Exec=env AE_SINK=ALSA kodi-standalone
-TryExec=env AE_SINK=ALSA kodi-standalone
+Name=emulationstation
+Comment=Temulationstation
+Exec=env AE_SINK=ALSA emulationstation
+TryExec=env AE_SINK=ALSA emulationstation
 Type=Application
 EOF
 
@@ -231,18 +231,18 @@ msg_info "Setting up autologin"
 
 cat <<EOF >/etc/lightdm/lightdm.conf
 [Seat:*]
-#autologin-user=kodi
-#autologin-session=kodi-alsa
+#autologin-user=roberto
+#autologin-session=emulationstation
 EOF
 
 msg_ok "Set up autologin"
 
 mkdir /etc/lightdm/lightdm.conf.d/
 
-cat <<EOF >/etc/lightdm/lightdm.conf.d/autologin-kodi.conf
+cat <<EOF >/etc/lightdm/lightdm.conf.d/autologin-emulationstation.conf
 [Seat:*]
-autologin-user=kodi
-autologin-session=kodi-alsa
+autologin-user=roberto
+autologin-session=emulationstation
 EOF
 msg_ok "Set up autologin"
 
