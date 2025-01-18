@@ -204,7 +204,7 @@ msg_ok "Installed emulation"
 msg_info "Updating xsession"
 cat <<EOF >/usr/share/xsessions/emulationstation-alsa.desktop
 [Desktop Entry]
-Name=Kodi-alsa
+Name=emulationstation
 Comment=emulationstation
 Exec=env AE_SINK=ALSA emulationstation
 TryExec=env AE_SINK=ALSA emulationstation
